@@ -2,15 +2,9 @@
 
 Click on the back of a card to flip it.
 
-![image](https://user-images.githubusercontent.com/17979853/140742147-7cfaf2ad-0703-4a97-abc0-eadc44bf69d3.png)
-
 If 2 cards match, they will remain face up. Unsuccessful matches increase the number of turns.
 
-![image](https://user-images.githubusercontent.com/17979853/140742294-d8e0155b-b840-4a40-ad8d-0d4106b08338.png)
-
 Click on New Game button to flip all cards to face down and reset the number of turns.
-
-![image](https://user-images.githubusercontent.com/17979853/140742445-631892dc-c04e-4448-9e79-37e0ec984a8a.png)
 
 
 # Getting Started with Create React App

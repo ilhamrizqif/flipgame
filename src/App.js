@@ -2,81 +2,92 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import SingleCard from './components/SingleCard';
 
-// array of card images
-const cardImages = [
-  { "src": "/img/helmet-1.png", matched: false },
-  { "src": "/img/potion-1.png", matched: false },
-  { "src": "/img/ring-1.png", matched: false },
-  { "src": "/img/scroll-1.png", matched: false },
-  { "src": "/img/shield-1.png", matched: false },
-  { "src": "/img/sword-1.png", matched: false },
-]
+const cardImages = [    { "src": "/img/apple.png", matched: false },    { "src": "/img/bibit.png", matched: false },    { "src": "/img/pupuk.png", matched: false },    { "src": "/img/penyiram.png", matched: false },    { "src": "/img/pohon1.png", matched: false },    { "src": "/img/pohon2.png", matched: false },];
 
 function App() {
-
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
+  const [score, setScore] = useState(0);
+  const [hearts, setHearts] = useState(3);
 
-  // shuffle cards, duplicate cards to get set of 12, assign random ID to each
   const shuffleCards = () => {
-    const shuffledCards = [...cardImages, ...cardImages]      // 2 lots of card images
-      .sort(() => Math.random() - 0.5)                        // shuffled array
-      .map((card) => ({ ...card, id: Math.random() }))        // add on random ID number to each card
+  const shuffledCards = [...cardImages, ...cardImages]
+    .sort(() => Math.random() - 0.5)
+    .map((card) => ({ ...card, id: Math.random() }))
 
-    setChoiceOne(null);
-    setChoiceTwo(null);
-    setCards(shuffledCards);
-    setTurns(0);
-  }
+  setChoiceOne(null);
+  setChoiceTwo(null);
+  setCards(shuffledCards);
+  setTurns(0);
+  setScore(0);
+  setHearts(3); // reset hearts to 3
+}
 
-  // handle a user choice, update choice one or two
   const handleChoice = (card) => {
-    choiceOne ? setChoiceTwo(card) : setChoiceOne(card)        // if choiceOne is null (is false), update with setChoiceOne, else update choiceTwo with setChoiceTwo
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
-  // reset game automagically
   useEffect(() => {
     shuffleCards()
   }, [])
 
-  // compare two selected cards
   useEffect(() => {
-    if (choiceOne && choiceTwo) {
-      setDisabled(true);
-      if (choiceOne.src === choiceTwo.src) {
-        setCards(prevCards => {
-          return prevCards.map((card) => {
-            if (card.src === choiceOne.src) {
-              return { ...card, matched: true }
-            } else {
-              return card;
-            }
-          })
-        })
-        resetTurn();
-      } else {
-        setTimeout(() => resetTurn(), 1000);
+  if (choiceOne && choiceTwo) {
+    setDisabled(true);
+    if (choiceOne.src === choiceTwo.src) {
+      setCards((prevCards) => {
+        return prevCards.map((card) => {
+          if (card.src === choiceOne.src) {
+            return { ...card, matched: true };
+          } else {
+            return card;
+          }
+        });
+      });
+      setScore(score + 10);
+      resetTurn();
+    } else {
+      setTimeout(() => resetTurn(), 1000);
+      if (turns % 3 === 2) {
+        setHearts((hearts) => hearts - 1);
       }
     }
-  }, [choiceOne, choiceTwo])
+  }
+}, [choiceOne, choiceTwo]);
 
-  // reset choices and increase number of turns
+useEffect(() => {
+  if (cards.filter((card) => !card.matched).length === 0) {
+    setScore(score + 40)
+    alert("Congratulations! You won the game!");
+  } else if (hearts === 0) {
+    alert("Game over!");
+    shuffleCards();
+  }
+}, [cards, hearts]);
+
+
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns(prevTurns => prevTurns + 1);
     setDisabled(false);
+
   }
 
   return (
-    <div className="App">
-      <h1>Magic Match</h1>
-      <h5>A card memory game</h5>
+    <div className="App">   
+      <h1>Inggrid Harvest Game</h1>
       <button onClick={shuffleCards}>New Game</button>
       <p>Turns: {turns}</p>
+      <p>Score: {score.toFixed(2)}</p>
+      <div className="hearts">
+        {Array.from({ length: hearts }).map((_, index) => (
+          <img key={index} src="/img/heart.gif" alt="heart" className="life" />
+        ))}
+      </div>
       <div className="card-grid">
         {cards.map((card) => (
           <SingleCard

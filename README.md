@@ -1,4 +1,4 @@
-# Game Screenshots
+# Game Rules
 
 Click on the back of a card to flip it.
 
